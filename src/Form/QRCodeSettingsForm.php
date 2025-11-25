@@ -101,10 +101,8 @@ class QRCodeSettingsForm extends ConfigFormBase {
     ];
 
     $form['defaults']['sizing'] = [
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => $this->t('Size Settings'),
-      '#collapsible' => TRUE,
-      '#collapsed' => FALSE,
     ];
 
     $form['defaults']['sizing']['default_width'] = [

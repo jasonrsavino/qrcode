@@ -81,9 +81,6 @@ function template_preprocess_qrcode_display(&$variables) {
   // Convert attributes array to Drupal attributes object.
   $variables['attributes'] = new Attribute($variables['attributes']);
 
-  // Always attach the main library.
-  $variables['#attached']['library'][] = 'qrcode/qrcode.main';
-
   // Attach remote QR code library.
   $variables['#attached']['library'][] = 'qrcode/qrcode.remote';
 

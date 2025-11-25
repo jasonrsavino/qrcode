@@ -13,7 +13,14 @@ qrcode.remote:
   version: VERSION
   header: true
   js:
-    //unpkg.com/@bitjson/qr-code@1.0.2/dist/qr-code.js: { external: true, preprocess: false, minimized: false }
+    //unpkg.com/@bitjson/qr-code@1.0.2/dist/qr-code.js:
+      type: external
+      attributes:
+        defer: false
+      minified: false
+      preprocess: false
+  dependencies:
+    - qrcode/qrcode.main
 
 qrcode.admin:
   version: VERSION
