@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the QR Code module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function qrcode_requirements($phase) {
+  $requirements = [];
+
+  if ($phase === 'runtime') {
+    // Check if local library exists.
+    $module_path = \Drupal::service('extension.list.module')->getPath('qrcode');
+    $library_path = DRUPAL_ROOT . '/' . $module_path . '/js/qr-code.js';
+
+    if (!file_exists($library_path)) {
+      $requirements['qrcode_library'] = [
+        'title' => t('QR Code Library'),
+        'description' => t('The bitjson/qr-code library is not installed. Please ensure the qr-code.js file is in the modules js directory.'),
+        'severity' => REQUIREMENT_ERROR,
+        'value' => t('Local library not found'),
+      ];
+    }
+    else {
+      $requirements['qrcode_library'] = [
+        'title' => t('QR Code Library'),
+        'description' => t('Local bitjson/qr-code library is installed.'),
+        'severity' => REQUIREMENT_OK,
+        'value' => t('Local library installed'),
+      ];
+    }
+  }
+
+  return $requirements;
+}

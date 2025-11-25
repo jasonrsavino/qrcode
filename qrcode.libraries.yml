@@ -1,0 +1,24 @@
+qrcode.main:
+  version: VERSION
+  css:
+    theme:
+      css/qrcode.css: {}
+  js:
+    js/qrcode.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+
+qrcode.remote:
+  version: VERSION
+  header: true
+  js:
+    //unpkg.com/@bitjson/qr-code@1.0.2/dist/qr-code.js: { external: true, preprocess: false, minimized: false }
+
+qrcode.admin:
+  version: VERSION
+  css:
+    theme:
+      css/qrcode.admin.css: {}
+  dependencies:
+    - core/drupal

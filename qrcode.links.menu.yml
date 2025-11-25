@@ -1,0 +1,6 @@
+qrcode.settings:
+  title: 'QR Code'
+  route_name: qrcode.settings
+  description: 'Configure QR code generation settings'
+  parent: system.admin_config_media
+  weight: 10

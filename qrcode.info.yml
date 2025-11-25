@@ -1,0 +1,10 @@
+name: QR Code Generator
+description: 'Provides QR code generation functionality using the bitjson/qr-code library with customizable animations and styling.'
+type: module
+core_version_requirement: ^10 || ^11
+package: 'Web Services'
+dependencies:
+  - drupal:node
+  - drupal:field
+  - drupal:text
+configure: qrcode.settings

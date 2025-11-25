@@ -1,0 +1,96 @@
+<?php
+
+/**
+ * @file
+ * QR Code module for generating QR codes using the bitjson/qr-code library.
+ */
+
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function qrcode_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.qrcode':
+      return '<p>' . t('The QR Code module provides functionality to generate QR codes using the bitjson/qr-code library. It supports animations, custom styling, and can be used as a field formatter or standalone generator.') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function qrcode_theme($existing, $type, $theme, $path) {
+  return [
+    'qrcode_display' => [
+      'variables' => [
+        'contents' => '',
+        'module_color' => '#000000',
+        'position_ring_color' => '#000000',
+        'position_center_color' => '#000000',
+        'mask_x_to_y_ratio' => '1',
+        'animation' => '',
+        'width' => '200px',
+        'height' => '200px',
+        'background_color' => '#ffffff',
+        'icon' => '',
+        'attributes' => [],
+        'qr_id' => '',
+      ],
+      'template' => 'qrcode-display',
+    ],
+    'qrcode_generator_form' => [
+      'render element' => 'form',
+      'template' => 'qrcode-generator-form',
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for qrcode display templates.
+ *
+ * Default template: qrcode-display.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - contents: The content to encode in the QR code.
+ *   - module_color: Color of QR code modules.
+ *   - position_ring_color: Color of position indicator rings.
+ *   - position_center_color: Color of position indicator centers.
+ *   - mask_x_to_y_ratio: Aspect ratio for the mask.
+ *   - animation: Animation preset name.
+ *   - width: Width of the QR code.
+ *   - height: Height of the QR code.
+ *   - background_color: Background color.
+ *   - icon: Optional icon to display in center.
+ *   - attributes: HTML attributes.
+ *   - qr_id: Unique identifier for the QR code element.
+ */
+function template_preprocess_qrcode_display(&$variables) {
+  // Ensure we have a unique ID.
+  if (empty($variables['qr_id'])) {
+    $variables['qr_id'] = 'qr-' . uniqid();
+  }
+
+  // Prepare attributes.
+  if (!isset($variables['attributes'])) {
+    $variables['attributes'] = [];
+  }
+
+  // Convert attributes array to Drupal attributes object.
+  $variables['attributes'] = new Attribute($variables['attributes']);
+
+  // Always attach the main library.
+  $variables['#attached']['library'][] = 'qrcode/qrcode.main';
+
+  // Attach remote QR code library.
+  $variables['#attached']['library'][] = 'qrcode/qrcode.remote';
+
+  // Add animation JavaScript if animation is specified.
+  if (!empty($variables['animation'])) {
+    $variables['#attached']['drupalSettings']['qrcode'][$variables['qr_id']] = [
+      'animation' => $variables['animation'],
+    ];
+  }
+}

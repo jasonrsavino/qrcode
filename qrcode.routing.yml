@@ -1,0 +1,28 @@
+qrcode.settings:
+  path: '/admin/config/media/qrcode'
+  defaults:
+    _form: '\Drupal\qrcode\Form\QRCodeSettingsForm'
+    _title: 'QR Code Settings'
+  requirements:
+    _permission: 'administer qrcode settings'
+
+qrcode.generator:
+  path: '/qrcode/generate'
+  defaults:
+    _form: '\Drupal\qrcode\Form\QRCodeGeneratorForm'
+    _title: 'QR Code Generator'
+  requirements:
+    _permission: 'generate qr codes'
+
+qrcode.preview:
+  path: '/qrcode/preview/{contents}'
+  defaults:
+    _controller: '\Drupal\qrcode\Controller\QRCodeController::preview'
+    _title: 'QR Code Preview'
+  requirements:
+    _permission: 'generate qr codes'
+    contents: .+
+  options:
+    parameters:
+      contents:
+        type: string

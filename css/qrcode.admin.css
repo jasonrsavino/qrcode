@@ -1,0 +1,65 @@
+/**
+ * @file
+ * Administrative styles for QR Code module.
+ */
+
+/* Settings form styling */
+.qrcode-settings-form fieldset,
+.qrcode-generator-form fieldset,
+.qrcode-settings-form details,
+.qrcode-generator-form details {
+  margin-bottom: 1.5em;
+}
+
+.qrcode-settings-form .form-type-color,
+.qrcode-generator-form .form-type-color {
+  display: inline-block;
+  margin-right: 1em;
+}
+
+.qrcode-settings-form .form-type-color input[type="color"],
+.qrcode-generator-form .form-type-color input[type="color"] {
+  width: 60px;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Preview section */
+.qrcode-settings-form #edit-preview {
+  text-align: center;
+  padding: 2em;
+  background: #f8f9fa;
+  border: 1px dashed #dee2e6;
+  margin: 1em 0;
+}
+
+/* Generator form result section */
+#qr-code-result {
+  margin-top: 2em;
+  padding: 2em;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  text-align: center;
+  border-radius: 4px;
+}
+
+#qr-code-result:empty {
+  display: none;
+}
+
+/* Field formatter settings */
+.field-formatter-settings-qrcode .form-type-checkbox {
+  margin-bottom: 0.5em;
+}
+
+/* Responsive admin forms */
+@media (max-width: 768px) {
+  .qrcode-settings-form .form-type-color,
+  .qrcode-generator-form .form-type-color {
+    display: block;
+    margin-right: 0;
+    margin-bottom: 0.5em;
+  }
+}

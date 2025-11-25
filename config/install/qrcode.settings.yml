@@ -1,0 +1,8 @@
+default_module_color: '#000000'
+default_position_ring_color: '#000000'
+default_position_center_color: '#000000'
+default_background_color: '#ffffff'
+default_animation: ''
+default_width: '200px'
+default_height: '200px'
+default_mask_x_to_y_ratio: 1

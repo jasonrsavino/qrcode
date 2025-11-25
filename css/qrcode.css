@@ -1,0 +1,79 @@
+/**
+ * @file
+ * Styles for QR Code module.
+ */
+
+/* QR Code display container */
+.qr-code-display {
+  display: inline-block;
+  text-align: center;
+}
+
+/* QR Code formatter wrapper */
+.qr-code-formatter-wrapper {
+  margin: 1em 0;
+}
+
+.qr-code-formatter-wrapper .qr-code-original-text,
+.qr-code-formatter-wrapper .qr-code-original-link {
+  margin: 0.5em 0;
+  word-break: break-all;
+}
+
+/* Horizontal layout for formatter */
+.qr-code-formatter-horizontal {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.qr-code-formatter-horizontal .qr-code-original-text,
+.qr-code-formatter-horizontal .qr-code-original-link {
+  flex: 1;
+  margin: 0;
+}
+
+/* QR Code preview pages */
+.qr-code-preview-description,
+.qr-code-preview-info {
+  margin: 1em 0;
+  padding: 1em;
+  background: #f8f9fa;
+  border-left: 4px solid #007cba;
+}
+
+.qr-code-download-info {
+  margin-top: 1em;
+  padding: 0.75em;
+  background: #e7f3ff;
+  border: 1px solid #b8daff;
+  border-radius: 4px;
+  color: #004085;
+}
+
+/* Generator form styling */
+.qrcode-generator-form .form-item-contents textarea {
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .qr-code-formatter-horizontal {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  qr-code {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .qr-code-download-info,
+  .qr-code-preview-info {
+    display: none;
+  }
+}

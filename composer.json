@@ -1,0 +1,26 @@
+{
+    "name": "drupal/qrcode",
+    "description": "Provides QR code generation functionality using the bitjson/qr-code library with customizable animations and styling.",
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
+    "keywords": ["drupal", "qr-code", "generator", "bitjson", "svg", "animation"],
+    "require": {
+        "drupal/core": "^10 || ^11"
+    },
+    "suggest": {
+        "npm-asset/bitjson--qr-code": "Local installation of the bitjson/qr-code library"
+    },
+    "extra": {
+        "drupal": {
+            "version": "1.0.0",
+            "project": "qrcode",
+            "datestamp": "1732492800"
+        }
+    },
+    "authors": [
+        {
+            "name": "Your Name",
+            "email": "your.email@example.com"
+        }
+    ]
+}

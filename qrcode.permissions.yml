@@ -1,0 +1,11 @@
+administer qrcode settings:
+  title: 'Administer QR Code settings'
+  description: 'Configure QR Code module settings including library source and default styling.'
+
+generate qr codes:
+  title: 'Generate QR codes'
+  description: 'Access QR code generation functionality.'
+
+use qrcode field formatter:
+  title: 'Use QR Code field formatter'
+  description: 'Apply QR Code formatter to text fields.'

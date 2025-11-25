@@ -1,0 +1,9 @@
+services:
+  qrcode.generator:
+    class: Drupal\qrcode\Service\QRCodeGenerator
+    arguments: ['@config.factory', '@logger.factory']
+  
+  qrcode.field_formatter:
+    class: Drupal\qrcode\Plugin\Field\FieldFormatter\QRCodeFormatter
+    tags:
+      - { name: plugin.manager.field.formatter }

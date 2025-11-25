@@ -1,0 +1,36 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a QR code.
+ *
+ * Available variables:
+ * - contents: The content to encode in the QR code.
+ * - module_color: Color of QR code modules.
+ * - position_ring_color: Color of position indicator rings.
+ * - position_center_color: Color of position indicator centers.
+ * - mask_x_to_y_ratio: Aspect ratio for the mask.
+ * - animation: Animation preset name.
+ * - width: Width of the QR code.
+ * - height: Height of the QR code.
+ * - background_color: Background color.
+ * - icon: Optional icon to display in center.
+ * - attributes: HTML attributes for the QR code element.
+ * - qr_id: Unique identifier for the QR code element.
+ *
+ * @ingroup themeable
+ */
+#}
+<qr-code
+  id="{{ qr_id }}"
+  contents="{{ contents }}"
+  {% if module_color %}module-color="{{ module_color }}"{% endif %}
+  {% if position_ring_color %}position-ring-color="{{ position_ring_color }}"{% endif %}
+  {% if position_center_color %}position-center-color="{{ position_center_color }}"{% endif %}
+  {% if mask_x_to_y_ratio %}mask-x-to-y-ratio="{{ mask_x_to_y_ratio }}"{% endif %}
+  style="width: {{ width }}; height: {{ height }}; background-color: {{ background_color }};"
+  {{ attributes }}
+>
+  {% if icon %}
+    {{ icon|raw }}
+  {% endif %}
+</qr-code>
