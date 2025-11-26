@@ -88,6 +88,7 @@ class QRCodeFormatter extends FormatterBase implements ContainerFactoryPluginInt
       'height' => '200px',
       'mask_x_to_y_ratio' => '1',
       'animation' => '',
+      'icon' => '',
     ] + parent::defaultSettings();
   }
 
@@ -171,6 +172,14 @@ class QRCodeFormatter extends FormatterBase implements ContainerFactoryPluginInt
       '#default_value' => $this->getSetting('animation'),
     ];
 
+    $elements['icon'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Icon Path'),
+      '#description' => $this->t('Path to the icon file to display in the center of QR codes. Leave empty to use the default icon (assets/icon.png). Path should be relative to the site root and must start with a leading slash (e.g., /sites/default/files/my-icon.png).'),
+      '#default_value' => $this->getSetting('icon'),
+      '#placeholder' => '/sites/default/files/icon.png',
+    ];
+
     return $elements;
   }
 
@@ -218,6 +227,7 @@ class QRCodeFormatter extends FormatterBase implements ContainerFactoryPluginInt
         'height' => $this->getSetting('height'),
         'mask_x_to_y_ratio' => $this->getSetting('mask_x_to_y_ratio'),
         'animation' => $this->getSetting('animation'),
+        'icon' => $this->getSetting('icon'),
       ];
 
       $qr_code = $this->qrcodeGenerator->generateQRCode($content, $options);

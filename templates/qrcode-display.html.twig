@@ -31,6 +31,6 @@
   {{ attributes }}
 >
   {% if icon %}
-    {{ icon|raw }}
+    <img src="{{ icon|raw }}" slot="icon" />
   {% endif %}
 </qr-code>

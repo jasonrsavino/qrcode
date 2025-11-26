@@ -88,7 +88,7 @@ class QRCodeGenerator {
       'width' => $config->get('default_width') ?? '200px',
       'height' => $config->get('default_height') ?? '200px',
       'background_color' => $config->get('default_background_color') ?? '#ffffff',
-      'icon' => '',
+      'icon' => $this->getIconPath($config->get('default_icon')),
       'attributes' => [],
       'qr_id' => 'qr-' . uniqid(),
     ];
@@ -182,6 +182,33 @@ class QRCodeGenerator {
     ];
 
     return in_array(strtolower($color), $css_colors);
+  }
+
+  /**
+   * Get the icon path, using default if none specified.
+   *
+   * @param string|null $icon_path
+   *   The configured icon path or null.
+   *
+   * @return string
+   *   The icon path to use.
+   */
+  protected function getIconPath($icon_path) {
+    // If no icon path specified, use the default.
+    if (empty($icon_path)) {
+      $module_path = \Drupal::service('extension.list.module')->getPath('qrcode');
+      $icon = '/' . $module_path . '/assets/icon.png';
+      return $icon;
+    }
+
+    // If it's already a URL, return as-is.
+    if (filter_var($icon_path, FILTER_VALIDATE_URL)) {
+      return $icon_path;
+    }
+
+    // For all other paths, treat them as relative to site root.
+    // Paths should start with a leading slash.
+    return $icon_path;
   }
 
 }

@@ -145,6 +145,20 @@ class QRCodeGeneratorForm extends FormBase {
       '#default_value' => '',
     ];
 
+    $form['icon'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Icon'),
+      '#open' => FALSE,
+    ];
+
+    $form['icon']['icon_path'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Icon Path'),
+      '#description' => $this->t('Path to the icon file to display in the center of QR codes. Leave empty to use the default icon (assets/icon.png). Path should be relative to the site root and must start with a leading slash (e.g., /sites/default/files/my-icon.png).'),
+      '#default_value' => '',
+      '#placeholder' => '/sites/default/files/icon.png',
+    ];
+
     $form['actions'] = [
       '#type' => 'actions',
     ];
@@ -176,6 +190,7 @@ class QRCodeGeneratorForm extends FormBase {
         'height' => $form_state->getValue('height', '200px'),
         'mask_x_to_y_ratio' => $form_state->getValue('mask_x_to_y_ratio', 1),
         'animation' => $form_state->getValue('animation_preset', ''),
+        'icon' => $form_state->getValue('icon_path', ''),
       ];
 
       $form['result']['qr_code'] = $this->qrcodeGenerator->generateQRCode(
@@ -234,6 +249,23 @@ class QRCodeGeneratorForm extends FormBase {
       $value = $form_state->getValue($field);
       if (!empty($value) && !preg_match('/^[\d.]+\s*(px|em|rem|%|vh|vw)$/', $value)) {
         $form_state->setErrorByName($field, $this->t('Invalid dimension format for @field. Use units like px, em, rem, %, vh, or vw.', ['@field' => $field]));
+      }
+    }
+
+    // Validate icon path if provided.
+    $icon_path = $form_state->getValue('icon_path');
+    if (!empty($icon_path)) {
+      // Check if it's a URL or a file path.
+      if (!filter_var($icon_path, FILTER_VALIDATE_URL)) {
+        // For site root paths, check if they start with a slash and if file exists.
+        if (!str_starts_with($icon_path, '/')) {
+          $form_state->setErrorByName('icon_path', $this->t('Icon path must start with a leading slash (e.g., /sites/default/files/icon.png).'));
+        } else {
+          $full_path = DRUPAL_ROOT . $icon_path;
+          if (!file_exists($full_path)) {
+            $form_state->setErrorByName('icon_path', $this->t('Icon file not found: @path', ['@path' => $icon_path]));
+          }
+        }
       }
     }
   }

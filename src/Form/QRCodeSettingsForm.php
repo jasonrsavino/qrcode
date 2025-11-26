@@ -100,6 +100,14 @@ class QRCodeSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('default_animation') ?? '',
     ];
 
+    $module_path = \Drupal::service('extension.list.module')->getPath('qrcode');
+    $form['defaults']['default_icon'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Default Icon Path'),
+      '#description' => $this->t('Path to the icon file to display in the center of QR codes. Leave empty to use the default icon (assets/icon.png). Path should be relative to the site root and must start with a leading slash (e.g., /sites/default/files/my-icon.png).'),
+      '#default_value' => $config->get('default_icon') ?? '/' . $module_path . '/assets/icon.png',
+    ];
+
     $form['defaults']['sizing'] = [
       '#type' => 'details',
       '#title' => $this->t('Size Settings'),
@@ -147,6 +155,7 @@ class QRCodeSettingsForm extends ConfigFormBase {
       'width' => $form['defaults']['sizing']['default_width']['#default_value'],
       'height' => $form['defaults']['sizing']['default_height']['#default_value'],
       'mask_x_to_y_ratio' => $form['defaults']['sizing']['default_mask_x_to_y_ratio']['#default_value'],
+      'icon' => $form['defaults']['default_icon']['#default_value'],
     ];
 
     $form['preview']['qr_preview'] = $this->qrcodeGenerator->generateQRCode(
@@ -185,6 +194,23 @@ class QRCodeSettingsForm extends ConfigFormBase {
       }
     }
 
+    // Validate icon path if provided.
+    $icon_path = $form_state->getValue('default_icon');
+    if (!empty($icon_path)) {
+      // Check if it's a URL or a file path.
+      if (!filter_var($icon_path, FILTER_VALIDATE_URL)) {
+        // For site root paths, check if they start with a slash and if file exists.
+        if (!str_starts_with($icon_path, '/')) {
+          $form_state->setErrorByName('default_icon', $this->t('Icon path must start with a leading slash (e.g., /sites/default/files/icon.png).'));
+        } else {
+          $full_path = DRUPAL_ROOT . $icon_path;
+          if (!file_exists($full_path)) {
+            $form_state->setErrorByName('default_icon', $this->t('Icon file not found: @path', ['@path' => $icon_path]));
+          }
+        }
+      }
+    }
+
     parent::validateForm($form, $form_state);
   }
 
@@ -201,6 +227,7 @@ class QRCodeSettingsForm extends ConfigFormBase {
       ->set('default_width', $form_state->getValue('default_width'))
       ->set('default_height', $form_state->getValue('default_height'))
       ->set('default_mask_x_to_y_ratio', $form_state->getValue('default_mask_x_to_y_ratio'))
+      ->set('default_icon', $form_state->getValue('default_icon'))
       ->save();
 
     parent::submitForm($form, $form_state);

@@ -91,3 +91,19 @@ function template_preprocess_qrcode_display(&$variables) {
     ];
   }
 }
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function qrcode_views_data_alter(array &$data) {
+  // Add QR Code field to Shurly table if Shurly module is enabled.
+  if (\Drupal::moduleHandler()->moduleExists('shurly') && isset($data['shurly'])) {
+    $data['shurly']['qr_code'] = [
+      'title' => t('QR Code'),
+      'help' => t('Display a QR code for the Shurly URL'),
+      'field' => [
+        'id' => 'shurly_qr_code',
+      ],
+    ];
+  }
+}
