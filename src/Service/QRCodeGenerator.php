@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\qrcode\Service;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
@@ -28,6 +31,13 @@ class QRCodeGenerator {
   protected $logger;
 
   /**
+   * The module extension list.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected $moduleExtensionList;
+
+  /**
    * Available animation presets.
    *
    * @var array
@@ -48,10 +58,13 @@ class QRCodeGenerator {
    *   The config factory.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The logger factory.
+   * @param \Drupal\Core\Extension\ModuleExtensionList $module_extension_list
+   *   The module extension list.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, LoggerChannelFactoryInterface $logger_factory) {
+  public function __construct(ConfigFactoryInterface $config_factory, LoggerChannelFactoryInterface $logger_factory, ModuleExtensionList $module_extension_list) {
     $this->configFactory = $config_factory;
     $this->logger = $logger_factory->get('qrcode');
+    $this->moduleExtensionList = $module_extension_list;
   }
 
   /**
@@ -75,7 +88,7 @@ class QRCodeGenerator {
    * @return array
    *   A render array for the QR code.
    */
-  public function generateQrCode($contents, array $options = []) {
+  public function generateQRCode($contents, array $options = []) {
     $config = $this->configFactory->get('qrcode.settings');
 
     // Set defaults from configuration.
@@ -196,7 +209,7 @@ class QRCodeGenerator {
   protected function getIconPath($icon_path) {
     // If no icon path specified, use the default.
     if (empty($icon_path)) {
-      $module_path = \Drupal::service('extension.list.module')->getPath('qrcode');
+      $module_path = $this->moduleExtensionList->getPath('qrcode');
       $icon = '/' . $module_path . '/assets/icon.png';
       return $icon;
     }

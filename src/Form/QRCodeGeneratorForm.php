@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\qrcode\Form;
 
 use Drupal\Core\Form\FormBase;
@@ -167,7 +169,7 @@ class QRCodeGeneratorForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Generate QR Code'),
       '#ajax' => [
-        'callback' => '::generateQrCodeAjax',
+        'callback' => '::generateQRCodeAjax',
         'wrapper' => 'qr-code-result',
         'effect' => 'fade',
       ],
@@ -212,7 +214,7 @@ class QRCodeGeneratorForm extends FormBase {
   /**
    * Ajax callback for generating QR code.
    */
-  public function generateQrCodeAjax(array &$form, FormStateInterface $form_state) {
+  public function generateQRCodeAjax(array &$form, FormStateInterface $form_state) {
     return $form['result'];
   }
 
@@ -260,7 +262,8 @@ class QRCodeGeneratorForm extends FormBase {
         // For site root paths, check if they start with a slash and if file exists.
         if (!str_starts_with($icon_path, '/')) {
           $form_state->setErrorByName('icon_path', $this->t('Icon path must start with a leading slash (e.g., /sites/default/files/icon.png).'));
-        } else {
+        }
+        else {
           $full_path = DRUPAL_ROOT . $icon_path;
           if (!file_exists($full_path)) {
             $form_state->setErrorByName('icon_path', $this->t('Icon file not found: @path', ['@path' => $icon_path]));

@@ -3,7 +3,7 @@
  * Main JavaScript for QR Code module.
  */
 
-(function ($, Drupal, drupalSettings) {
+(function (Drupal, drupalSettings) {
   'use strict';
 
   /**
@@ -16,7 +16,7 @@
         initQRCodeAnimations(context, settings);
       } else {
         // Retry after a short delay if library not ready
-        setTimeout(function() {
+        setTimeout(function () {
           if (typeof customElements !== 'undefined' && customElements.get('qr-code')) {
             initQRCodeAnimations(context, settings);
           }
@@ -30,13 +30,13 @@
    */
   function initQRCodeAnimations(context, settings) {
     if (settings.qrcode) {
-      Object.keys(settings.qrcode).forEach(function(qrId) {
+      Object.keys(settings.qrcode).forEach(function (qrId) {
         var qrElement = document.getElementById(qrId);
         var config = settings.qrcode[qrId];
-        
+
         if (qrElement && config.animation) {
           // Listen for the codeRendered event and then trigger animation
-          qrElement.addEventListener('codeRendered', function() {
+          qrElement.addEventListener('codeRendered', function () {
             if (typeof qrElement.animateQRCode === 'function') {
               try {
                 qrElement.animateQRCode(config.animation);
@@ -54,11 +54,11 @@
    * Utility function to create custom animations.
    */
   Drupal.qrcode = Drupal.qrcode || {};
-  
+
   /**
    * Apply custom animation to a QR code element.
    */
-  Drupal.qrcode.animate = function(elementId, animationFunction) {
+  Drupal.qrcode.animate = function (elementId, animationFunction) {
     var element = document.getElementById(elementId);
     if (element && typeof element.animateQRCode === 'function') {
       element.animateQRCode(animationFunction);
@@ -68,8 +68,8 @@
   /**
    * Get QR code element by ID.
    */
-  Drupal.qrcode.getElement = function(elementId) {
+  Drupal.qrcode.getElement = function (elementId) {
     return document.getElementById(elementId);
   };
 
-})(jQuery, Drupal, drupalSettings);
+})(Drupal, drupalSettings);

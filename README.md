@@ -13,6 +13,7 @@ The QR Code module allows you to:
 
 - **Field Formatter**: Convert text, string, and link fields into QR codes
 - **Standalone Generator**: Create QR codes through a dedicated form interface
+- **Shurly Integration**: Views field plugin for Shurly short URLs (see [SHURLY_INTEGRATION.md](SHURLY_INTEGRATION.md))
 - **Customizable Styling**: Configure colors, dimensions, and visual effects
 - **Animation Support**: Apply various animation presets to QR codes
 - **CDN Integration**: Automatic loading from unpkg.com CDN

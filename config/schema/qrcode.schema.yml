@@ -1,0 +1,31 @@
+qrcode.settings:
+  type: config_object
+  label: 'QR Code settings'
+  mapping:
+    default_module_color:
+      type: string
+      label: 'Default module color'
+    default_position_ring_color:
+      type: string
+      label: 'Default position ring color'
+    default_position_center_color:
+      type: string
+      label: 'Default position center color'
+    default_background_color:
+      type: string
+      label: 'Default background color'
+    default_animation:
+      type: string
+      label: 'Default animation preset'
+    default_width:
+      type: string
+      label: 'Default width'
+    default_height:
+      type: string
+      label: 'Default height'
+    default_mask_x_to_y_ratio:
+      type: float
+      label: 'Default mask X to Y ratio'
+    default_icon:
+      type: string
+      label: 'Default icon path'

@@ -1,30 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\qrcode\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\qrcode\Service\QRCodeGenerator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'qrcode' formatter.
- *
- * @FieldFormatter(
- *   id = "qrcode",
- *   label = @Translation("QR Code"),
- *   field_types = {
- *     "string",
- *     "string_long",
- *     "text",
- *     "text_long",
- *     "text_with_summary",
- *     "link"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'qrcode',
+  label: new TranslatableMarkup('QR Code'),
+  field_types: [
+    'string',
+    'string_long',
+    'text',
+    'text_long',
+    'text_with_summary',
+    'link',
+  ],
+)]
 class QRCodeFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
 
   /**

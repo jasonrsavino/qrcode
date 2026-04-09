@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\qrcode\Form;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\qrcode\Service\QRCodeGenerator;
@@ -20,13 +24,26 @@ class QRCodeSettingsForm extends ConfigFormBase {
   protected $qrcodeGenerator;
 
   /**
+   * The module extension list.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected $moduleExtensionList;
+
+  /**
    * Constructs a QRCodeSettingsForm object.
    *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    * @param \Drupal\qrcode\Service\QRCodeGenerator $qrcode_generator
    *   The QR Code generator service.
+   * @param \Drupal\Core\Extension\ModuleExtensionList $module_extension_list
+   *   The module extension list.
    */
-  public function __construct(QRCodeGenerator $qrcode_generator) {
+  public function __construct(ConfigFactoryInterface $config_factory, QRCodeGenerator $qrcode_generator, ModuleExtensionList $module_extension_list) {
+    parent::__construct($config_factory);
     $this->qrcodeGenerator = $qrcode_generator;
+    $this->moduleExtensionList = $module_extension_list;
   }
 
   /**
@@ -34,7 +51,9 @@ class QRCodeSettingsForm extends ConfigFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('qrcode.generator')
+      $container->get('config.factory'),
+      $container->get('qrcode.generator'),
+      $container->get('extension.list.module')
     );
   }
 
@@ -100,7 +119,7 @@ class QRCodeSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('default_animation') ?? '',
     ];
 
-    $module_path = \Drupal::service('extension.list.module')->getPath('qrcode');
+    $module_path = $this->moduleExtensionList->getPath('qrcode');
     $form['defaults']['default_icon'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Default Icon Path'),
@@ -202,7 +221,8 @@ class QRCodeSettingsForm extends ConfigFormBase {
         // For site root paths, check if they start with a slash and if file exists.
         if (!str_starts_with($icon_path, '/')) {
           $form_state->setErrorByName('default_icon', $this->t('Icon path must start with a leading slash (e.g., /sites/default/files/icon.png).'));
-        } else {
+        }
+        else {
           $full_path = DRUPAL_ROOT . $icon_path;
           if (!file_exists($full_path)) {
             $form_state->setErrorByName('default_icon', $this->t('Icon file not found: @path', ['@path' => $icon_path]));

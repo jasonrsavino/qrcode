@@ -1,10 +1,12 @@
 <?php
 
-namespace Drupal\qrcode\Plugin\views\field;
+declare(strict_types=1);
 
+namespace Drupal\qrcode_shurly\Plugin\views\field;
+
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\qrcode\Service\QRCodeGenerator;
 use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -12,6 +14,7 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Field handler to present a QR code for Shurly short URLs.
@@ -29,6 +32,20 @@ class ShurlyQRCode extends FieldPluginBase implements ContainerFactoryPluginInte
   protected $qrcodeGenerator;
 
   /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * Constructs a ShurlyQRCode object.
    *
    * @param array $configuration
@@ -39,10 +56,16 @@ class ShurlyQRCode extends FieldPluginBase implements ContainerFactoryPluginInte
    *   The plugin implementation definition.
    * @param \Drupal\qrcode\Service\QRCodeGenerator $qrcode_generator
    *   The QR Code generator service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, QRCodeGenerator $qrcode_generator) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, QRCodeGenerator $qrcode_generator, ConfigFactoryInterface $config_factory, RequestStack $request_stack) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->qrcodeGenerator = $qrcode_generator;
+    $this->configFactory = $config_factory;
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -53,14 +76,16 @@ class ShurlyQRCode extends FieldPluginBase implements ContainerFactoryPluginInte
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('qrcode.generator')
+      $container->get('qrcode.generator'),
+      $container->get('config.factory'),
+      $container->get('request_stack')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     parent::init($view, $display, $options);
     $this->additional_fields['source'] = 'source';
     $this->additional_fields['destination'] = 'destination';
@@ -201,29 +226,29 @@ class ShurlyQRCode extends FieldPluginBase implements ContainerFactoryPluginInte
    */
   public function adminSummary() {
     $summary_parts = [];
-    
-    // Add QR content type to summary
+
+    // Add QR content type to summary.
     $content_options = [
       'short_url' => $this->t('Short URL (full URL)'),
       'short_path' => $this->t('Short path only'),
       'long_url' => $this->t('Long URL (destination)'),
     ];
     $summary_parts[] = $this->t('Content: @content', ['@content' => $content_options[$this->options['qr_content']]]);
-    
-    // Add size info to summary
+
+    // Add size info to summary.
     $summary_parts[] = $this->t('Size: @width x @height', [
       '@width' => $this->options['width'],
       '@height' => $this->options['height'],
     ]);
-    
-    // Add animation if set
+
+    // Add animation if set.
     if (!empty($this->options['animation'])) {
       $presets = $this->qrcodeGenerator->getAnimationPresets();
       $summary_parts[] = $this->t('Animation: @animation', [
         '@animation' => $presets[$this->options['animation']] ?? $this->options['animation'],
       ]);
     }
-    
+
     return implode(', ', $summary_parts);
   }
 
@@ -260,10 +285,10 @@ class ShurlyQRCode extends FieldPluginBase implements ContainerFactoryPluginInte
         }
         else {
           // Fallback: construct URL manually if function not available.
-          $config = \Drupal::config('shurly.settings');
+          $config = $this->configFactory->get('shurly.settings');
           $shurly_base = trim($config->get('shurly_base') ?? '');
           if (empty($shurly_base)) {
-            $shurly_base = \Drupal::request()->getSchemeAndHttpHost();
+            $shurly_base = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
           }
           $content = $shurly_base . '/' . $source;
         }

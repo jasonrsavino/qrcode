@@ -1,0 +1,9 @@
+name: QR Code — Shurly Integration
+description: 'Optional integration providing a Views field plugin for generating QR codes from Shurly short URLs.'
+type: module
+core_version_requirement: ^10 || ^11
+package: 'Web Services'
+dependencies:
+  - qrcode:qrcode
+  - drupal:views
+  - shurly:shurly
